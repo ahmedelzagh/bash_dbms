@@ -1,5 +1,28 @@
 #!/bin/bash
 
+# Delete a specific row from a table based on primary key
+function delete_from_table() {
+    echo -n "Enter table name: "
+    read table_name
+    if [ ! -f "$table_name" ]; then
+        echo "Table does not exist!"
+        return
+    fi
+
+    echo -n "Enter primary key value to delete: "
+    read primary_key
+
+    # Check if the row exists
+    if ! grep -q "^$primary_key," "$table_name"; then
+        echo "Error: No row found with primary key '$primary_key'."
+        return
+    fi
+
+    # Delete the row
+    grep -v "^$primary_key," "$table_name" > temp_file && mv temp_file "$table_name"
+    echo "Row with primary key '$primary_key' deleted from table '$table_name'."
+}
+
 # Select and display rows from a table
 function select_from_table() {
     echo -n "Enter table name: "
