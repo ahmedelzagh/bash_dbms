@@ -1,5 +1,37 @@
 #!/bin/bash
 
+# Insert a new row into a table
+function insert_into_table() {
+    echo -n "Enter table name: "
+    read table_name
+    if [ ! -f "$table_name" ]; then
+        echo "Table does not exist!"
+        return
+    fi
+
+    # Read the column names from the first line of the file
+    IFS=',' read -r -a columns <<< "$(head -n 1 "$table_name")"
+
+    # Collect data for each column
+    row_data=()
+    for column in "${columns[@]}"; do
+        echo -n "Enter value for $column: "
+        read value
+        row_data+=("$value")
+    done
+
+    # Check for unique primary key (assuming first column is the primary key)
+    primary_key=${row_data[0]}
+    if grep -q "^$primary_key," "$table_name"; then
+        echo "Error: Primary key '$primary_key' already exists!"
+        return
+    fi
+
+    # Insert the new row into the table
+    echo "${row_data[*]}" | tr ' ' ',' >> "$table_name"
+    echo "Row inserted into table '$table_name'."
+}
+
 # Drop (delete) a specific table (file)
 function drop_table() {
     echo -n "Enter table name to drop: "
