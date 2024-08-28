@@ -1,5 +1,23 @@
 #!/bin/bash
 
+# Select and display rows from a table
+function select_from_table() {
+    echo -n "Enter table name: "
+    read table_name
+    if [ ! -f "$table_name" ]; then
+        echo "Table does not exist!"
+        return
+    fi
+
+    echo "Displaying data from table '$table_name':"
+    column_names=$(head -n 1 "$table_name")
+    echo "$column_names"
+    echo "-------------------------------------"
+    tail -n +2 "$table_name" | while IFS=',' read -r line; do
+        echo "$line"
+    done
+}
+
 # Insert a new row into a table
 function insert_into_table() {
     echo -n "Enter table name: "
