@@ -1,5 +1,17 @@
 #!/bin/bash
 
+# Create a new database (directory)
+function create_database() {
+    echo -n "Enter database name: "
+    read db_name
+    if [ -d "$db_name" ]; then
+        echo "Database already exists!"
+    else
+        mkdir "$db_name"
+        echo "Database '$db_name' created successfully."
+    fi
+}
+
 # Main Menu Function
 function main_menu() {
     echo "===================="
