@@ -1,5 +1,17 @@
 #!/bin/bash
 
+# Drop (delete) a specific table (file)
+function drop_table() {
+    echo -n "Enter table name to drop: "
+    read table_name
+    if [ -f "$table_name" ]; then
+        rm "$table_name"
+        echo "Table '$table_name' dropped successfully."
+    else
+        echo "Table does not exist!"
+    fi
+}
+
 # List all tables (files)
 function list_tables() {
     echo "Tables:"
