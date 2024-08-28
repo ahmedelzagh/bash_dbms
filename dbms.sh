@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# List all databases (directories)
+function list_databases() {
+    echo "Databases:"
+    ls -d */
+}
+
 # Create a new database (directory)
 function create_database() {
     echo -n "Enter database name: "
