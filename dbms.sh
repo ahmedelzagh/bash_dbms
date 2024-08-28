@@ -1,5 +1,19 @@
 #!/bin/bash
 
+# Create a new table (file)
+function create_table() {
+    echo -n "Enter table name: "
+    read table_name
+    if [ -f "$table_name" ]; then
+        echo "Table already exists!"
+    else
+        echo -n "Enter the columns (comma-separated): "
+        read columns
+        echo "$columns" > "$table_name"
+        echo "Table '$table_name' created with columns: $columns"
+    fi
+}
+
 # Database Menu Function
 function database_menu() {
     while true; do
