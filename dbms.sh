@@ -30,6 +30,18 @@ function database_menu() {
     done
 }
 
+# Drop (delete) a specific database (directory)
+function drop_database() {
+    echo -n "Enter database name to drop: "
+    read db_name
+    if [ -d "$db_name" ]; then
+        rm -r "$db_name"
+        echo "Database '$db_name' dropped successfully."
+    else
+        echo "Database does not exist!"
+    fi
+}
+
 # Connect to a specific database (enter database menu)
 function connect_to_database() {
     echo -n "Enter database name: "
