@@ -126,11 +126,19 @@ function update_table() {
 
     # Collect new data for each column
     new_data=()
+    index=0
     for column in "${columns[@]}"; do
         echo -n "Enter new value for $column (leave blank to keep current value): "
         read value
         if [ -z "$value" ]; then
+            # Retain current value if no new value is provided
             value=$(grep "^$primary_key," "$table_name" | cut -d ',' -f $((index+1)))
+        elif [ $index -eq 0 ]; then
+            # Check if the new primary key is unique
+            if grep -q "^$value," "$table_name" && [ "$value" != "$primary_key" ]; then
+                echo "Error: Primary key '$value' already exists!"
+                return
+            fi
         fi
         new_data+=("$value")
         index=$((index+1))
@@ -140,5 +148,5 @@ function update_table() {
     grep -v "^$primary_key," "$table_name" > temp_file
     echo "${new_data[*]}" | tr ' ' ',' >> temp_file
     mv temp_file "$table_name"
-    echo "Row with primary key '$primary_key' updated in table '$table_name'."
+    echo "Row with primary key '${new_data[0]}' updated in table '$table_name'."
 }
