@@ -1,5 +1,45 @@
 #!/bin/bash
 
+# Update a specific row in a table based on primary key
+function update_table() {
+    echo -n "Enter table name: "
+    read table_name
+    if [ ! -f "$table_name" ]; then
+        echo "Table does not exist!"
+        return
+    fi
+
+    echo -n "Enter primary key value to update: "
+    read primary_key
+
+    # Check if the row exists
+    if ! grep -q "^$primary_key," "$table_name"; then
+        echo "Error: No row found with primary key '$primary_key'."
+        return
+    fi
+
+    # Read the column names from the first line of the file
+    IFS=',' read -r -a columns <<< "$(head -n 1 "$table_name")"
+
+    # Collect new data for each column
+    new_data=()
+    for column in "${columns[@]}"; do
+        echo -n "Enter new value for $column (leave blank to keep current value): "
+        read value
+        if [ -z "$value" ]; then
+            value=$(grep "^$primary_key," "$table_name" | cut -d ',' -f $((index+1)))
+        fi
+        new_data+=("$value")
+        index=$((index+1))
+    done
+
+    # Update the row
+    grep -v "^$primary_key," "$table_name" > temp_file
+    echo "${new_data[*]}" | tr ' ' ',' >> temp_file
+    mv temp_file "$table_name"
+    echo "Row with primary key '$primary_key' updated in table '$table_name'."
+}
+
 # Delete a specific row from a table based on primary key
 function delete_from_table() {
     echo -n "Enter table name: "
