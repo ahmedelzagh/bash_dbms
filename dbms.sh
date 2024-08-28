@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# List all tables (files)
+function list_tables() {
+    echo "Tables:"
+    ls -p | grep -v /
+}
+
 # Create a new table (file)
 function create_table() {
     echo -n "Enter table name: "
